@@ -1,17 +1,16 @@
 "use client"
 
 import { usePayments } from "@/hooks/usePayments";
-import { ChangeEvent, useState } from "react";
-import { GetStaticProps } from 'next';
+import { useState } from "react";
 
-export const HelloWorld: GetStaticProps = () => {
+export const HelloWorld = () => {
 
   const [changed, setChanged] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
 
   const [user, setUser] = useState<'Giuseppe' | 'Chiara'>('Chiara');
   const [amount, setAmount] = useState<number>(0);
-  const [paidFor, setPaidFor] = useState<string[]>(['Chiara', 'Giuseppe'])
+  const [paidFor, setPaidFor] = useState<['Giuseppe'] | ['Chiara'] | ['Giuseppe', 'Chiara']>(['Giuseppe', 'Chiara'])
   const [paidForSelect, setPaidForSelect] = useState<string>('Per entrambi')
   const [forWhat, setForWhat] = useState<string>('')
 
@@ -37,7 +36,7 @@ export const HelloWorld: GetStaticProps = () => {
 
     switch(paidFor) {
       case 'Per entrambi':
-        setPaidFor(['Chiara', 'Giuseppe'])
+        setPaidFor(['Giuseppe','Chiara'])
         break;
       case 'Per Giuseppe':
         setPaidFor(['Giuseppe'])
