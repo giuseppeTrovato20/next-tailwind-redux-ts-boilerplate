@@ -1,3 +1,4 @@
+"use client"
 import DefaultLayout from "@/layouts/default.layout";
 import HelloWorld from "@/components/hello-world";
 

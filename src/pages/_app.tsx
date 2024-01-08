@@ -1,3 +1,4 @@
+"use client"
 import { store } from "@/app/store";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
