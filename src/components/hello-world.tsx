@@ -8,21 +8,41 @@ export const HelloWorld = () => {
   const [changed, setChanged] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
 
-  const [user, setUser] = useState<'Giuseppe' | 'Chiara'>('Chiara');
-  const [amount, setAmount] = useState<number>(0);
-  const [paidFor, setPaidFor] = useState<['Giuseppe'] | ['Chiara'] | ['Giuseppe', 'Chiara']>(['Giuseppe', 'Chiara'])
+  const [user, setUser] = useState<'Peppe' | 'Chiara'>('Chiara');
+  const [amount, setAmount] = useState<number>();
+  const [paidFor, setPaidFor] = useState<['Peppe'] | ['Chiara'] | ['Peppe', 'Chiara']>(['Peppe', 'Chiara'])
   const [paidForSelect, setPaidForSelect] = useState<string>('Per entrambi')
   const [forWhat, setForWhat] = useState<string>('')
 
+  const [editModeId, setEditModeId] = useState<string>('');
+
   const handleSubmit = () => {
 
-    if(forWhat && user && amount && paidFor) {
-      createPayment({
-        user,
-        amount,
-        paidFor,
-        forWhat
-      })
+    if (forWhat && user && amount && paidFor) {
+
+      if(editModeId !== '' && editModeId !== undefined) {
+        patchPayment(editModeId, {
+          user,
+          amount,
+          paidFor,
+          forWhat
+        })
+        
+      } else {
+        createPayment({
+          user,
+          amount,
+          paidFor,
+          forWhat
+        })
+      }
+
+      setUser('Chiara')
+      setAmount(undefined)
+      setPaidFor(['Chiara'])
+      setForWhat('')
+      setEditModeId('')
+      
       console.log("Form inviato");
       setShowModal(false);
     } else {
@@ -34,12 +54,12 @@ export const HelloWorld = () => {
 
     setPaidForSelect(paidFor)
 
-    switch(paidFor) {
+    switch (paidFor) {
       case 'Per entrambi':
-        setPaidFor(['Giuseppe','Chiara'])
+        setPaidFor(['Peppe', 'Chiara'])
         break;
-      case 'Per Giuseppe':
-        setPaidFor(['Giuseppe'])
+      case 'Per Peppe':
+        setPaidFor(['Peppe'])
         break;
       case 'Per Chiara':
         setPaidFor(['Chiara'])
@@ -47,7 +67,7 @@ export const HelloWorld = () => {
     }
   }
 
-  const { balances, payments, isLoading, createPayment } = usePayments({ changed });
+  const { balances, payments, isLoading, createPayment, patchPayment, deletePayment } = usePayments({ changed });
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -55,38 +75,74 @@ export const HelloWorld = () => {
 
   const showBalance = () => {
 
-    const positiveUser = balances.Chiara > balances.Giuseppe ? 'Giuseppe' : 'Chiara';
-    const negativeUser = balances.Chiara > balances.Giuseppe ? 'Chiara' : 'Giuseppe';
+    const positiveUser = balances.Chiara > balances.Peppe ? 'Peppe' : 'Chiara';
+    const negativeUser = balances.Chiara > balances.Peppe ? 'Chiara' : 'Peppe';
 
     if (balances[negativeUser] === 0)
       return <h4>Conti apppareggiatiiii</h4>
 
-    return <h4>{`${negativeUser} deve a ${positiveUser} ${balances[negativeUser]}€` }</h4>
+    return <h4 className="mb-8">{`${negativeUser} deve a ${positiveUser} ${balances[negativeUser]}€`}</h4>
+  }
+
+  const editModal = ({ 
+    id,
+    user,
+    amount,
+    paidFor,
+    forWhat }: {
+      id: string | undefined,
+      user: 'Peppe' | 'Chiara',
+      amount: number,
+      paidFor: ['Peppe'] | ['Chiara'] | ['Peppe', 'Chiara'],
+      forWhat: string
+    }) => {
+    setShowModal(true)
+
+    setUser(user)
+    setAmount(amount)
+    setPaidFor(paidFor)
+    setForWhat(forWhat)
+    setEditModeId(id ? id : '')
   }
 
   return (
-    <div className="grid justify-center items-center h-screen">
+    <div className="flex flex-col justify-center items-start h-screen p-4 mb-32">
 
       {showBalance()}
 
       <table className="border-black  border-2 p-4 table table-xs">
         <tr className="border-black bg-neutral text-accent border-2 p-4">
-          <th className="border-black  p-4 hidden md:block" p-4>Chi ha pagato</th>
-          <th className="border-black border-2 p-4" p-4>Per cosa</th>
-          <th className="border-black border-2 p-4" p-4>Quanto</th>
-          <th className="border-black border-2 p-4" p-4>Per chi</th>
+          <th className="border-black border-2 ">Modifica</th>
+          <th className="border-black " p-4>Chi</th>
+          <th className="border-black border-2  " p-4>Per cosa</th>
+          <th className="border-black border-2 " p-4>€€</th>
+          <th className="border-black border-2 " p-4>Per chi</th>
         </tr>
         {payments?.map((p, i) => <tr key={i} className="border-black border-2 p-4">
-          <td className="border-black  p-4 hidden md:block">{p.user}</td>
-          <td className="border-black border-2 p-4">{p.forWhat}</td>
-          <td className="border-black border-2 p-4">{p.amount}€</td>
-          <td className="border-black border-2 p-4">{p.paidFor.map(user => <span>{user}<br /></span>)}</td>
+          <td className="border-black border-2">
+            <button onClick={ () => editModal({
+              id: p.id,
+              user: p.user,
+              amount: p.amount,
+              paidFor: p.paidFor,
+              forWhat: p.forWhat
+            })} className="btn btn-accent p-1 m-1 h-2">
+              <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" /></svg>
+            </button>
+            <button onClick={() => p.id ? deletePayment(p.id) : null} className="btn btn-error p-1">
+              <svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" /></svg>
+            </button>
+          </td>
+          <td className="border-black ">{p.user}</td>
+          <td className="border-black border-2 p-2">{p.forWhat}</td>
+          <td className="border-black border-2 p-2">{p.amount}€</td>
+          <td className="border-black border-2 p-2">{p.paidFor.map(user => <span>{user}<br /></span>)}</td>
         </tr>)}
       </table>
 
-      <div className="container mt-8">
-        <button className="btn btn-accent" onClick={() => { setShowModal(true), console.log(showModal) }}>Aggiungi nuovo pagamento</button>
-      </div>
+
+      <button className="btn btn-accent mx-4 fixed bottom-8 right-0 left-0 md:w-64" onClick={() => { setShowModal(true), console.log(showModal) }}>Aggiungi nuova spesa</button>
+
 
       <dialog id="my_modal_1" className={"modal flex justify-center items-center p-8 " + (showModal ? 'modal-open' : '')}>
         <div className="modal-box">
@@ -103,10 +159,10 @@ export const HelloWorld = () => {
                 <div className="label">
                   <span className="label-text">Pagato da</span>
                 </div>
-                <select value={user} onChange={(e) => setUser(e.target.value as 'Chiara' | 'Giuseppe')} className="select select-bordered" required>
+                <select value={user} onChange={(e) => setUser(e.target.value as 'Chiara' | 'Peppe')} className="select select-bordered" required>
                   <option value="">Seleziona un utente</option>
                   <option value="Chiara">Chiara</option>
-                  <option value="Giuseppe">Giuseppe</option>
+                  <option value="Peppe">Peppe</option>
                 </select>
               </label>
               <label className="form-control w-full max-w-xs">
@@ -122,13 +178,13 @@ export const HelloWorld = () => {
                 <select value={paidForSelect} onChange={(e) => handleChangePaidFor(e.target.value)} className="select select-bordered" required>
                   <option value="">Seleziona per chi</option>
                   <option value="Per entrambi">Per entrambi</option>
-                  <option>Per {user === 'Chiara' ? 'Giuseppe' : 'Chiara'}</option>
+                  <option>Per {user === 'Chiara' ? 'Peppe' : 'Chiara'}</option>
                 </select>
               </label>
             </div>
             <div className="modal-action">
               <button className="btn mr-4" type="button" onClick={() => setShowModal(false)}>Chiudi</button>
-              <button className="btn btn-primary" onClick={handleSubmit}>Aggiungi</button>
+              <button className="btn btn-primary" onClick={handleSubmit}>{editModeId === '' ? 'Aggiungi' : 'Modifica'}</button>
             </div>
           </form>
         </div>

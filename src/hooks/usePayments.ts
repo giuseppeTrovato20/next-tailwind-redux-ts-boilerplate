@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 
 export interface IPayment {
-    user: 'Giuseppe' | 'Chiara',
-    paidFor: ['Giuseppe'] | ['Chiara'] | ['Giuseppe', 'Chiara']
+    id?: string,
+    user: 'Peppe' | 'Chiara',
+    paidFor: ['Peppe'] | ['Chiara'] | ['Peppe', 'Chiara']
     amount: number,
     forWhat: string
 }
@@ -84,20 +85,20 @@ export const usePayments = ({changed}: {changed: boolean}) => {
 
   const balance = () => {
     const newBalances: {
-        Chiara: number, Giuseppe: number
+        Chiara: number, Peppe: number
     } = {
-        Chiara: 0, Giuseppe: 0
+        Chiara: 0, Peppe: 0
     };
 
     payments?.forEach(payment => {
       // subtract from paying user's balance
-      if(payment.user === 'Giuseppe'){
+      if(payment.user === 'Peppe'){
 
           if(payment.paidFor.length === 2) {
-            newBalances.Giuseppe -= payment.amount * 0.7;
+            newBalances.Peppe -= payment.amount * 0.7;
             newBalances.Chiara += payment.amount * 0.3;
           } else {
-            newBalances.Giuseppe -= payment.amount;
+            newBalances.Peppe -= payment.amount;
             newBalances.Chiara += payment.amount;
           }
       }
@@ -105,10 +106,10 @@ export const usePayments = ({changed}: {changed: boolean}) => {
 
         if(payment.paidFor.length === 2) {
             newBalances.Chiara -= payment.amount * 0.3;
-            newBalances.Giuseppe += payment.amount * 0.7;
+            newBalances.Peppe += payment.amount * 0.7;
         } else {
             newBalances.Chiara -= payment.amount;
-            newBalances.Giuseppe += payment.amount;
+            newBalances.Peppe += payment.amount;
         }
 
       }
