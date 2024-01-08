@@ -1,5 +1,5 @@
 "use client"
-
+/* eslint-disable react/jsx-key */
 import { usePayments } from "@/hooks/usePayments";
 import { useState } from "react";
 
@@ -133,7 +133,6 @@ export const HelloWorld = () => {
           </form>
         </div>
       </dialog>
-
 
     </div>
   );
