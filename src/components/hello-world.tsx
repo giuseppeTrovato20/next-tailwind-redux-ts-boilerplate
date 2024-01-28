@@ -106,7 +106,7 @@ export const HelloWorld = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-start h-screen p-4 pb-32">
+    <div className="flex flex-col justify-center items-start min-h-screen p-4 mt-4 mb-32">
 
       {showBalance()}
 
@@ -146,7 +146,7 @@ export const HelloWorld = () => {
 
       <dialog id="my_modal_1" className={"modal flex justify-center items-center p-8 " + (showModal ? 'modal-open' : '')}>
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Aggiungi nuova spesa</h3>
+          <h3 className="font-bold text-lg">{editModeId !== '' ?  "Modifica spesa" : "Aggiungi nuova spesa"}</h3>
           <form>
             <div className="flex flex-col gap-4">
               <label className="form-control w-full max-w-xs">
