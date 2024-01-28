@@ -107,7 +107,7 @@ export const HelloWorld = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-start min-h-screen p-4 mt-4 mb-32">
+    <div className="flex flex-col justify-center items-start min-h-screen p-4 pt-4 pb-32">
 
       {showBalance()}
 
