@@ -66,6 +66,10 @@ export const usePayments = ({changed}: {changed: boolean}) => {
     setIsLoading(false);
   };
 
+  const normalizeBalance = (balance: number) => {
+    return Math.abs(Math.floor(balance * 100) / 100);
+  }
+
   const patchPayment = async (paymentId: string, payment: Partial<IPayment>) => {
     setIsLoading(true);
     try {
@@ -116,7 +120,8 @@ export const usePayments = ({changed}: {changed: boolean}) => {
 
     });
 
-    console.log(newBalances)
+    newBalances.Chiara = normalizeBalance(newBalances.Chiara)
+    newBalances.Peppe = normalizeBalance(newBalances.Peppe)
 
     setBalances(newBalances);
   } 
