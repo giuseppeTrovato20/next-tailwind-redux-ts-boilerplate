@@ -101,6 +101,7 @@ export const HelloWorld = () => {
     setUser(user)
     setAmount(amount)
     setPaidFor(paidFor)
+    setPaidForSelect(paidFor.toString() === ['Peppe'].toString() ? 'Per Peppe' : paidFor.toString() === ['Chiara'].toString() ? 'Per Chiara' : 'Per entrambi')
     setForWhat(forWhat)
     setEditModeId(id ? id : '')
   }
