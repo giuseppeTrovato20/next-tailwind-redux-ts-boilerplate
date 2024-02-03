@@ -1,51 +1,44 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 
 export interface IPayment {
-    id?: string,
-    user: 'Peppe' | 'Chiara',
-    paidFor: ['Peppe'] | ['Chiara'] | ['Peppe', 'Chiara']
-    amount: number,
-    forWhat: string
+  id?: string;
+  user: "Peppe" | "Chiara";
+  paidFor: ["Peppe"] | ["Chiara"] | ["Peppe", "Chiara"];
+  amount: number;
+  forWhat: string;
 }
 
-const API_URL = 'https://pigbank-api-server-761d5781bddb.herokuapp.com/v1/treecount'
+const API_URL =
+  "https://pigbank-api-server-761d5781bddb.herokuapp.com/v1/treecount";
 
-export const usePayments = ({changed}: {changed: boolean}) => {
-
-  const [payments, setPayments] = useState<IPayment[]>()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [balances, setBalances] = useState<{[key: string]: number}>({});
+export const usePayments = ({ changed }: { changed: boolean }) => {
+  const [payments, setPayments] = useState<IPayment[]>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [balances, setBalances] = useState<{ [key: string]: number }>({});
 
   const getPayments = async () => {
     setIsLoading(true); // Set loading to true when the operation starts
     try {
-      const response = await fetch(API_URL, { method: 'GET' });
+      const response = await fetch(API_URL, { method: "GET" });
       const data = await response.json();
       setPayments(data);
-        
     } catch (error) {
       console.error("Failed to fetch payments:", error);
     }
     setIsLoading(false); // Set loading to false when operation is done
-  }
+  };
 
   const createPayment = async (payment: IPayment) => {
-
-    await setTimeout( () => console.log('gang'), 5000)
-    
-
     setIsLoading(true);
     try {
       const res = await fetch(API_URL, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payment),
       });
-      await setTimeout( () => console.log(res), 5000)
-      await setTimeout( () => console.log(res), 5000)
       await getPayments();
     } catch (error) {
       console.error("Failed to create payment:", error);
@@ -57,7 +50,7 @@ export const usePayments = ({changed}: {changed: boolean}) => {
     setIsLoading(true);
     try {
       await fetch(`${API_URL}/${paymentId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
       await getPayments();
     } catch (error) {
@@ -68,15 +61,18 @@ export const usePayments = ({changed}: {changed: boolean}) => {
 
   const normalizeBalance = (balance: number) => {
     return Math.floor(balance * 100) / 100;
-  }
+  };
 
-  const patchPayment = async (paymentId: string, payment: Partial<IPayment>) => {
+  const patchPayment = async (
+    paymentId: string,
+    payment: Partial<IPayment>
+  ) => {
     setIsLoading(true);
     try {
       await fetch(`${API_URL}/${paymentId}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payment),
       });
@@ -89,52 +85,82 @@ export const usePayments = ({changed}: {changed: boolean}) => {
 
   const balance = () => {
     const newBalances: {
-        Chiara: number, Peppe: number
+      Chiara: number;
+      Peppe: number;
+      totChiaraPerEntrambi: number;
+      totPeppePerEntrambi: number;
+      totChiaraPerPeppe: number;
+      totPeppePerChiara: number;
     } = {
-        Chiara: 0, Peppe: 0
+      Chiara: 0,
+      Peppe: 0,
+      totChiaraPerEntrambi: 0,
+      totPeppePerEntrambi: 0,
+      totChiaraPerPeppe: 0,
+      totPeppePerChiara: 0,
     };
 
-    payments?.forEach(payment => {
+    payments?.forEach((payment) => {
       // subtract from paying user's balance
-      if(payment.user === 'Peppe'){
+      if (payment.user === "Peppe") {
 
-          if(payment.paidFor.length === 2) {
-            newBalances.Peppe -= payment.amount * 0.7;
-            newBalances.Chiara += payment.amount * 0.3;
-          } else {
-            newBalances.Peppe -= payment.amount;
-            newBalances.Chiara += payment.amount;
-          }
-      }
-      else {
+        // se ho pagato io per entrambi che succede?
+        // chiara mi deve il 30% di quello che ho pagato, perché il 70% lo pago io.
+        // Quindi prendo il totale e lo divido in due parti il 70 e il 30.
+        // Se ho pagato 100€ per entrambi, io spendo 70€ e Chiara 30€.
+        // questo significa che vado a credito da chiara di 30€,
+        // per riportare la balance a 0, chiara deve darmi 30€.
+        // quindi metto balance negativa a me -30%
+        // e metto balance positiva a chiara +30% del pagato
 
-        if(payment.paidFor.length === 2) {
-            newBalances.Chiara -= payment.amount * 0.3;
-            newBalances.Peppe += payment.amount * 0.7;
+        if (payment.paidFor.length === 2) {
+          newBalances.totPeppePerEntrambi += payment.amount
+          
+          newBalances.Peppe -= payment.amount * 0.3;
+          newBalances.Chiara += payment.amount * 0.3;
         } else {
-            newBalances.Chiara -= payment.amount;
-            newBalances.Peppe += payment.amount;
-        }
+          newBalances.totPeppePerChiara += payment.amount;
 
+          newBalances.Peppe -= payment.amount;
+          newBalances.Chiara += payment.amount;
+        }
       }
 
+      // se invece a pagato Chiara per entrambi
+      // io devo a Chiara il 70% di quello che ha pagato lei
+      // quindi se lei ha pagato 100€
+      // lei va a credito di 70€ da parte mia
+      // per riportare la balance a 0 io devo darle 70€
+
+      else {
+        if (payment.paidFor.length === 2) {
+          newBalances.totChiaraPerEntrambi += payment.amount;
+
+          newBalances.Chiara -= payment.amount * 0.7;
+          newBalances.Peppe += payment.amount * 0.7;
+        } else {
+          newBalances.totChiaraPerPeppe += payment.amount;
+
+          newBalances.Chiara -= payment.amount;
+          newBalances.Peppe += payment.amount;
+        }
+      }
+
+      console.log(payment.paidFor, newBalances);
     });
 
-    newBalances.Chiara = normalizeBalance(newBalances.Chiara)
-    newBalances.Peppe = normalizeBalance(newBalances.Peppe)
+    newBalances.Chiara = normalizeBalance(newBalances.Chiara);
+    newBalances.Peppe = normalizeBalance(newBalances.Peppe);
 
     setBalances(newBalances);
-  } 
+  };
 
   useEffect(() => {
-
-    getPayments()
-
-
-  }, [changed])
+    getPayments();
+  }, [changed]);
 
   useEffect(() => {
-    balance(); 
+    balance();
   }, [isLoading]);
 
   return {
@@ -145,5 +171,5 @@ export const usePayments = ({changed}: {changed: boolean}) => {
     createPayment,
     deletePayment,
     patchPayment,
-  }
+  };
 };

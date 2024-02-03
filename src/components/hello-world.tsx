@@ -3,6 +3,10 @@
 import { usePayments } from "@/hooks/usePayments";
 import { useState } from "react";
 
+const normalizeBalance = (balance: number) => {
+  return Math.floor(balance * 100) / 100;
+};
+
 export const HelloWorld = () => {
 
   const [changed, setChanged] = useState<boolean>(false);
@@ -42,8 +46,6 @@ export const HelloWorld = () => {
       setPaidFor(['Peppe', 'Chiara'])
       setForWhat('')
       setEditModeId('')
-      
-      console.log("Form inviato");
       setShowModal(false);
     } else {
       alert("Per favore, riempi tutti i campi.");
@@ -81,7 +83,17 @@ export const HelloWorld = () => {
     if (balances[negativeUser] === 0)
       return <h4>Conti apppareggiatiiii</h4>
 
-    return <h4 className="mb-8">{`${negativeUser} deve a ${positiveUser} ${balances[negativeUser]}€`}</h4>
+    return <>
+      <h4 style={{borderBottom: "1px solid black"}} className="mb-8">{`${negativeUser} deve a ${positiveUser} ${balances[negativeUser]}€`}</h4>
+      <br/>
+      <span style={{borderBottom: "1px solid black"}}>Totale Chiara per entrambi: {balances.totChiaraPerEntrambi} di questi peppe deve pagare il 70%, quindi {normalizeBalance(balances.totChiaraPerEntrambi * 0.7)}</span>
+      <span>Totale Chiara per Peppe: {balances.totChiaraPerPeppe}</span>
+      <br/>
+      <span style={{borderBottom: "1px solid black"}}>Totale Peppe per entrambi: {balances.totPeppePerEntrambi} di questi peppe deve pagare il 30%, quindi {normalizeBalance(balances.totPeppePerEntrambi * 0.3)}</span>
+      <span>Totale Peppe per Peppe: {balances.totPeppePerChiara}</span>
+      <br/>
+      <br/>
+    </>
   }
 
   const handleAddNewExpanse = () => {
