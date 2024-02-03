@@ -67,7 +67,7 @@ export const usePayments = ({changed}: {changed: boolean}) => {
   };
 
   const normalizeBalance = (balance: number) => {
-    return Math.abs(Math.floor(balance * 100) / 100);
+    return Math.floor(balance * 100) / 100;
   }
 
   const patchPayment = async (paymentId: string, payment: Partial<IPayment>) => {

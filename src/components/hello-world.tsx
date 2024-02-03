@@ -39,7 +39,7 @@ export const HelloWorld = () => {
 
       setUser('Chiara')
       setAmount(undefined)
-      setPaidFor(['Chiara'])
+      setPaidFor(['Peppe', 'Chiara'])
       setForWhat('')
       setEditModeId('')
       
@@ -82,6 +82,12 @@ export const HelloWorld = () => {
       return <h4>Conti apppareggiatiiii</h4>
 
     return <h4 className="mb-8">{`${negativeUser} deve a ${positiveUser} ${balances[negativeUser]}€`}</h4>
+  }
+
+  const handleAddNewExpanse = () => {
+    setShowModal(true);
+    setPaidFor(["Peppe", "Chiara"]);
+    setPaidForSelect("Per entrambi");
   }
 
   const editModal = ({ 
@@ -142,7 +148,7 @@ export const HelloWorld = () => {
       </table>
 
 
-      <button className="btn btn-accent mx-4 fixed bottom-8 right-0 left-0 md:w-64" onClick={() => { setShowModal(true), console.log(showModal) }}>Aggiungi nuova spesa</button>
+      <button className="btn btn-accent mx-4 fixed bottom-8 right-0 left-0 md:w-64" onClick={handleAddNewExpanse}>Aggiungi nuova spesa</button>
 
 
       <dialog id="my_modal_1" className={"modal flex justify-center items-center p-8 " + (showModal ? 'modal-open' : '')}>
