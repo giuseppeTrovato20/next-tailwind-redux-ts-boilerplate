@@ -84,13 +84,15 @@ export const HelloWorld = () => {
       return <h4>Conti apppareggiatiiii</h4>
 
     return <>
-      <h4 style={{borderBottom: "1px solid black"}} className="mb-8">{`${negativeUser} deve a ${positiveUser} ${balances[negativeUser]}€`}</h4>
+      <h4 style={{borderBottom: "1px solid black"}} className="mb-8">{`${negativeUser} deve a ${positiveUser}`} <span className="text-primary">{`${balances[negativeUser]}€`}</span></h4>
       <br/>
       <span style={{borderBottom: "1px solid black"}}>Totale Chiara per entrambi: {balances.totChiaraPerEntrambi} di questi peppe deve pagare il 70%, quindi {normalizeBalance(balances.totChiaraPerEntrambi * 0.7)}</span>
       <span>Totale Chiara per Peppe: {balances.totChiaraPerPeppe}</span>
+
+
       <br/>
       <span style={{borderBottom: "1px solid black"}}>Totale Peppe per entrambi: {balances.totPeppePerEntrambi} di questi peppe deve pagare il 30%, quindi {normalizeBalance(balances.totPeppePerEntrambi * 0.3)}</span>
-      <span>Totale Peppe per Peppe: {balances.totPeppePerChiara}</span>
+      <span>Totale Peppe per Chiara: {balances.totPeppePerChiara}</span>
       <br/>
       <br/>
     </>
