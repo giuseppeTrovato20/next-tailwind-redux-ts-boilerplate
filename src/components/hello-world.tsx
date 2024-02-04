@@ -83,7 +83,9 @@ export const HelloWorld = () => {
     if (balances[negativeUser] === 0)
       return <h4>Conti apppareggiatiiii</h4>
 
-    return <h4 style={{borderBottom: "1px solid black"}} className="mb-8">{`${negativeUser} deve a ${positiveUser}`} <span className={negativeUser === 'Peppe' ? "text-primary" : "text-accent"}>{`${balances[negativeUser]}€`}</span></h4>
+    return <h4 style={{borderBottom: "1px solid black"}} className="mb-8"> 
+    <span className={negativeUser === 'Chiara' ? "text-primary" : "text-accent"}>{negativeUser}</span>
+    {` deve a `} <span className={positiveUser === 'Chiara' ? "text-primary" : "text-accent"}>{positiveUser}</span>: <span className={positiveUser === 'Peppe' ? "text-accent" : "text-primary"}>{`${balances[negativeUser]}€`}</span></h4>
 
   }
 
