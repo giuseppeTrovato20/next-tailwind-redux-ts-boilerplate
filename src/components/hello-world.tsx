@@ -83,19 +83,35 @@ export const HelloWorld = () => {
     if (balances[negativeUser] === 0)
       return <h4>Conti apppareggiatiiii</h4>
 
+    return <h4 style={{borderBottom: "1px solid black"}} className="mb-8">{`${negativeUser} deve a ${positiveUser}`} <span className={negativeUser === 'Peppe' ? "text-primary" : "text-accent"}>{`${balances[negativeUser]}€`}</span></h4>
+
+  }
+
+  const showCalculations = () => {
+
+    const totaleChiara = normalizeBalance(balances.totChiaraPerEntrambi * 0.7) + balances.totChiaraPerPeppe;
+    const totalePeppe = normalizeBalance(balances.totPeppePerEntrambi * 0.3) + balances.totPeppePerChiara;
+
     return <>
-      <h4 style={{borderBottom: "1px solid black"}} className="mb-8">{`${negativeUser} deve a ${positiveUser}`} <span className="text-primary">{`${balances[negativeUser]}€`}</span></h4>
-      <br/>
-      <span style={{borderBottom: "1px solid black"}}>Totale Chiara per entrambi: {balances.totChiaraPerEntrambi} di questi peppe deve pagare il 70%, quindi {normalizeBalance(balances.totChiaraPerEntrambi * 0.7)}</span>
-      <span>Totale Chiara per Peppe: {balances.totChiaraPerPeppe}</span>
-
+      <span className="mt-32" style={{borderBottom: "1px solid black"}}>Totale Chiara per entrambi: {balances.totChiaraPerEntrambi} di questi peppe deve pagare il 70%, quindi {normalizeBalance(balances.totChiaraPerEntrambi * 0.7)}€</span>
+      <span>Totale Chiara per Peppe: {balances.totChiaraPerPeppe} - paga per intero</span>
 
       <br/>
-      <span style={{borderBottom: "1px solid black"}}>Totale Peppe per entrambi: {balances.totPeppePerEntrambi} di questi peppe deve pagare il 30%, quindi {normalizeBalance(balances.totPeppePerEntrambi * 0.3)}</span>
-      <span>Totale Peppe per Chiara: {balances.totPeppePerChiara}</span>
+      <span style={{borderBottom: "1px solid black"}}>Totale Peppe per entrambi: {balances.totPeppePerEntrambi} di questi peppe deve pagare il 30%, quindi {normalizeBalance(balances.totPeppePerEntrambi * 0.3)}€</span>
+      <span>Totale Peppe per Chiara: {balances.totPeppePerChiara} - paga per intero</span>
+
       <br/>
+
+      <span>Quindi = {normalizeBalance(balances.totChiaraPerEntrambi * 0.7)} + {balances.totChiaraPerPeppe} = {totaleChiara}€</span>
       <br/>
+      <span><span>Quindi = {normalizeBalance(balances.totPeppePerEntrambi * 0.3)} + {balances.totPeppePerChiara} = {totalePeppe}€</span></span>
+      <br/>
+
+      <span>{totaleChiara > totalePeppe ? <span>{totaleChiara} - {totalePeppe} = {normalizeBalance(totaleChiara - totalePeppe)}</span> : <span>{totalePeppe} - {totaleChiara} = {normalizeBalance(totalePeppe - totaleChiara)}</span>} </span>
+      <br/>
+      {showBalance()}
     </>
+
   }
 
   const handleAddNewExpanse = () => {
@@ -154,12 +170,16 @@ export const HelloWorld = () => {
               <svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" /></svg>
             </button>
           </td>
-          <td className="border-black ">{p.user}</td>
+          <td className={(p.user == "Chiara") ? 'text-primary' : "text-accent"}>{p.user}</td>
           <td className="border-black border-2 p-2">{p.forWhat}</td>
-          <td className="border-black border-2 p-2">{p.amount}€</td>
-          <td className="border-black border-2 p-2">{p.paidFor.map(user => <span>{user}<br /></span>)}</td>
+          <td className={(p.user == "Chiara") ? 'border-black border-2 p-2 text-primary' : "border-black border-2 p-2 text-accent"}>{p.amount}€</td>
+          <td className="border-black border-2 p-2">{p.paidFor.map(user => <span className={user === 'Chiara' ? "text-primary" : "text-accent"}>{user}<br /></span>)}</td>
         </tr>)}
       </table>
+
+      <br/>
+
+      {showCalculations()}
 
 
       <button className="btn btn-accent mx-4 fixed bottom-8 right-0 left-0 md:w-64" onClick={handleAddNewExpanse}>Aggiungi nuova spesa</button>
