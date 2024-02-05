@@ -152,10 +152,10 @@ export const HelloWorld = () => {
       <table className="border-black  border-2 p-4 table table-xs">
         <tr className="border-black bg-neutral text-accent border-2 p-4">
           <th className="border-black border-2 ">Modifica</th>
-          <th className="border-black " p-4>Chi</th>
-          <th className="border-black border-2  " p-4>Per cosa</th>
-          <th className="border-black border-2 " p-4>€€</th>
-          <th className="border-black border-2 " p-4>Per chi</th>
+          <th className="border-black " >Chi</th>
+          <th className="border-black border-2  " >Per cosa</th>
+          <th className="border-black border-2 " >€€</th>
+          <th className="border-black border-2 " >Per chi</th>
         </tr>
         {payments?.map((p, i) => <tr key={i} className="border-black border-2 p-4">
           <td className="border-black border-2">
