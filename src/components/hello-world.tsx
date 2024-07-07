@@ -301,7 +301,7 @@ export const HelloWorld = () => {
 
       <br />
 
-      <div className="pagination">
+      <div className="pagination mt-2">
         {currentPage !== 1 && <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
