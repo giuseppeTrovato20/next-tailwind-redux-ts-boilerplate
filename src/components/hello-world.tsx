@@ -7,7 +7,7 @@ const normalizeBalance = (balance: number) => {
   return Math.floor(balance * 100) / 100;
 };
 
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 6;
 
 export const HelloWorld = () => {
   const [changed, setChanged] = useState<boolean>(false);
