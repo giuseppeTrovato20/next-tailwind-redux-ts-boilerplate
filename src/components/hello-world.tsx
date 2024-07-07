@@ -86,7 +86,7 @@ export const HelloWorld = () => {
     },
   });
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
 
