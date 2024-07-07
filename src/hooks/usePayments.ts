@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 
 export interface IPayment {
@@ -12,23 +11,59 @@ export interface IPayment {
 const API_URL =
   "https://pigbank-api-server-761d5781bddb.herokuapp.com/v1/treecount";
 
-export const usePayments = ({ changed }: { changed: boolean }) => {
-  const [payments, setPayments] = useState<IPayment[]>();
+  interface UsePaymentsProps {
+    changed: boolean;
+    filter?: Record<string, any>;
+    options?: {
+      limit?: number;
+      skip?: number;
+      page?: number;
+      sortBy?: {
+        [key: string]: "asc" | "desc";
+      };
+    };
+  }
+
+export const usePayments = ({ changed, filter = {}, options = {} }: UsePaymentsProps) => {
+  const [payments, setPayments] = useState<IPayment[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [balances, setBalances] = useState<{ [key: string]: number }>({});
+
+  const [allPayments, setAllPayments] = useState<IPayment[]>([]);
+
+  const getAllPayments = async () => {
+    const response = await fetch(API_URL + "/all", { method: "GET" });
+    const data = await response.json();
+    setAllPayments(data);
+  }
 
   const getPayments = async () => {
     setIsLoading(true); // Set loading to true when the operation starts
     try {
-      const response = await fetch(API_URL, { method: "GET" });
+      const queryParams = new URLSearchParams({
+        ...Object.entries(filter).reduce((acc: Record<string, string>, [key, value]) => {
+          acc[`filter[${key}]`] = value.toString();
+          return acc;
+        }, {}),
+        ...Object.entries(options).reduce((acc: Record<string, string>, [key, value]) => {
+          acc[`options[${key}]`] = value.toString();
+          return acc;
+        }, {}),
+      });
+
+      console.log("XXXX",queryParams)
+
+      const response = await fetch(`${API_URL}?${queryParams.toString()}`, { method: "GET" });
       const data = await response.json();
-      setPayments(data);
+      setPayments(data.results);
     } catch (error) {
       console.error("Failed to fetch payments:", error);
     }
+
+    await getAllPayments();
+
     setIsLoading(false); // Set loading to false when operation is done
   };
-
   const createPayment = async (payment: IPayment) => {
     setIsLoading(true);
     try {
@@ -100,10 +135,11 @@ export const usePayments = ({ changed }: { changed: boolean }) => {
       totPeppePerChiara: 0,
     };
 
-    payments?.forEach((payment) => {
+    if(!allPayments) return
+
+    allPayments?.forEach((payment) => {
       // subtract from paying user's balance
       if (payment.user === "Peppe") {
-
         // se ho pagato io per entrambi che succede?
         // chiara mi deve il 30% di quello che ho pagato, perché il 70% lo pago io.
         // Quindi prendo il totale e lo divido in due parti il 70 e il 30.
@@ -114,8 +150,8 @@ export const usePayments = ({ changed }: { changed: boolean }) => {
         // e metto balance positiva a chiara +30% del pagato
 
         if (payment.paidFor.length === 2) {
-          newBalances.totPeppePerEntrambi += payment.amount
-          
+          newBalances.totPeppePerEntrambi += payment.amount;
+
           newBalances.Peppe -= payment.amount * 0.3;
           newBalances.Chiara += payment.amount * 0.3;
         } else {
@@ -131,7 +167,6 @@ export const usePayments = ({ changed }: { changed: boolean }) => {
       // quindi se lei ha pagato 100€
       // lei va a credito di 70€ da parte mia
       // per riportare la balance a 0 io devo darle 70€
-
       else {
         if (payment.paidFor.length === 2) {
           newBalances.totChiaraPerEntrambi += payment.amount;
@@ -157,7 +192,8 @@ export const usePayments = ({ changed }: { changed: boolean }) => {
 
   useEffect(() => {
     getPayments();
-  }, [changed]);
+    getAllPayments();
+  }, [changed, options.page]);
 
   useEffect(() => {
     balance();
