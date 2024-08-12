@@ -142,13 +142,13 @@ export const usePayments = ({ changed, filter = {}, options = {} }: UsePaymentsP
       // subtract from paying user's balance
       if (payment.user === "Peppe") {
         // se ho pagato io per entrambi che succede?
-        // chiara mi deve il 30% di quello che ho pagato, perché il 70% lo pago io.
-        // Quindi prendo il totale e lo divido in due parti il 70 e il 30.
-        // Se ho pagato 100€ per entrambi, io spendo 70€ e Chiara 30€.
-        // questo significa che vado a credito da chiara di 30€,
-        // per riportare la balance a 0, chiara deve darmi 30€.
-        // quindi metto balance negativa a me -30%
-        // e metto balance positiva a chiara +30% del pagato
+        // chiara mi deve il 40% di quello che ho pagato, perché il 60% lo pago io.
+        // Quindi prendo il totale e lo divido in due parti il 60 e il 40.
+        // Se ho pagato 100€ per entrambi, io spendo 60€ e Chiara 40€.
+        // questo significa che vado a credito da chiara di 40€,
+        // per riportare la balance a 0, chiara deve darmi 40€.
+        // quindi metto balance negativa a me -40%
+        // e metto balance positiva a chiara +40% del pagato
 
         if (payment.paidFor.length === 2) {
           newBalances.totPeppePerEntrambi += payment.amount;
@@ -164,10 +164,10 @@ export const usePayments = ({ changed, filter = {}, options = {} }: UsePaymentsP
       }
 
       // se invece a pagato Chiara per entrambi
-      // io devo a Chiara il 70% di quello che ha pagato lei
+      // io devo a Chiara il 60% di quello che ha pagato lei
       // quindi se lei ha pagato 100€
-      // lei va a credito di 70€ da parte mia
-      // per riportare la balance a 0 io devo darle 70€
+      // lei va a credito di 60€ da parte mia
+      // per riportare la balance a 0 io devo darle 60€
       else {
         if (payment.paidFor.length === 2) {
           newBalances.totChiaraPerEntrambi += payment.amount;

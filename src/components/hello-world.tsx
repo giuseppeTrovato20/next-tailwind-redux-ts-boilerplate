@@ -134,7 +134,7 @@ export const HelloWorld = () => {
       <>
         <span className="mt-32" style={{ borderBottom: "1px solid black" }}>
           Totale Chiara per entrambi: {balances.totChiaraPerEntrambi} di questi
-          peppe deve pagare il 70%, quindi{" "}
+          peppe deve pagare il 60%, quindi{" "}
           {normalizeBalance(balances.totChiaraPerEntrambi * 0.6)}€
         </span>
         <span>
@@ -145,7 +145,7 @@ export const HelloWorld = () => {
         <br />
         <span style={{ borderBottom: "1px solid black" }}>
           Totale Peppe per entrambi: {balances.totPeppePerEntrambi} di questi
-          peppe deve pagare il 30%, quindi{" "}
+          peppe deve pagare il 40%, quindi{" "}
           {normalizeBalance(balances.totPeppePerEntrambi * 0.4)}€
         </span>
         <span>
@@ -157,13 +157,13 @@ export const HelloWorld = () => {
 
         <span>
           Quindi = {normalizeBalance(balances.totChiaraPerEntrambi * 0.6)} +{" "}
-          {balances.totChiaraPerPeppe} = {totaleChiara}€
+          {normalizeBalance(balances.totChiaraPerPeppe)} = {totaleChiara}€
         </span>
         <br />
         <span>
           <span>
             Quindi = {normalizeBalance(balances.totPeppePerEntrambi * 0.4)} +{" "}
-            {balances.totPeppePerChiara} = {totalePeppe}€
+            {normalizeBalance(balances.totPeppePerChiara)} = {totalePeppe}€
           </span>
         </span>
         <br />
@@ -171,12 +171,12 @@ export const HelloWorld = () => {
         <span>
           {totaleChiara > totalePeppe ? (
             <span>
-              {totaleChiara} - {totalePeppe} ={" "}
+              {normalizeBalance(totaleChiara)} - {normalizeBalance(totalePeppe)} ={" "}
               {normalizeBalance(totaleChiara - totalePeppe)}
             </span>
           ) : (
             <span>
-              {totalePeppe} - {totaleChiara} ={" "}
+              {normalizeBalance(totalePeppe)} - {normalizeBalance(totaleChiara)} ={" "}
               {normalizeBalance(totalePeppe - totaleChiara)}
             </span>
           )}{" "}
