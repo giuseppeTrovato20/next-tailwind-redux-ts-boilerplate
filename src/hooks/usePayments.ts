@@ -153,8 +153,8 @@ export const usePayments = ({ changed, filter = {}, options = {} }: UsePaymentsP
         if (payment.paidFor.length === 2) {
           newBalances.totPeppePerEntrambi += payment.amount;
 
-          newBalances.Peppe -= payment.amount * 0.3;
-          newBalances.Chiara += payment.amount * 0.3;
+          newBalances.Peppe -= payment.amount * 0.4;
+          newBalances.Chiara += payment.amount * 0.4;
         } else {
           newBalances.totPeppePerChiara += payment.amount;
 
@@ -172,8 +172,8 @@ export const usePayments = ({ changed, filter = {}, options = {} }: UsePaymentsP
         if (payment.paidFor.length === 2) {
           newBalances.totChiaraPerEntrambi += payment.amount;
 
-          newBalances.Chiara -= payment.amount * 0.7;
-          newBalances.Peppe += payment.amount * 0.7;
+          newBalances.Chiara -= payment.amount * 0.6;
+          newBalances.Peppe += payment.amount * 0.6;
         } else {
           newBalances.totChiaraPerPeppe += payment.amount;
 

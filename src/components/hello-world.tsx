@@ -124,10 +124,10 @@ export const HelloWorld = () => {
 
   const showCalculations = () => {
     const totaleChiara =
-      normalizeBalance(balances.totChiaraPerEntrambi * 0.7) +
+      normalizeBalance(balances.totChiaraPerEntrambi * 0.6) +
       balances.totChiaraPerPeppe;
     const totalePeppe =
-      normalizeBalance(balances.totPeppePerEntrambi * 0.3) +
+      normalizeBalance(balances.totPeppePerEntrambi * 0.4) +
       balances.totPeppePerChiara;
 
     return (
@@ -135,7 +135,7 @@ export const HelloWorld = () => {
         <span className="mt-32" style={{ borderBottom: "1px solid black" }}>
           Totale Chiara per entrambi: {balances.totChiaraPerEntrambi} di questi
           peppe deve pagare il 70%, quindi{" "}
-          {normalizeBalance(balances.totChiaraPerEntrambi * 0.7)}€
+          {normalizeBalance(balances.totChiaraPerEntrambi * 0.6)}€
         </span>
         <span>
           Totale Chiara per Peppe: {balances.totChiaraPerPeppe} - paga per
@@ -146,7 +146,7 @@ export const HelloWorld = () => {
         <span style={{ borderBottom: "1px solid black" }}>
           Totale Peppe per entrambi: {balances.totPeppePerEntrambi} di questi
           peppe deve pagare il 30%, quindi{" "}
-          {normalizeBalance(balances.totPeppePerEntrambi * 0.3)}€
+          {normalizeBalance(balances.totPeppePerEntrambi * 0.4)}€
         </span>
         <span>
           Totale Peppe per Chiara: {balances.totPeppePerChiara} - paga per
@@ -156,13 +156,13 @@ export const HelloWorld = () => {
         <br />
 
         <span>
-          Quindi = {normalizeBalance(balances.totChiaraPerEntrambi * 0.7)} +{" "}
+          Quindi = {normalizeBalance(balances.totChiaraPerEntrambi * 0.6)} +{" "}
           {balances.totChiaraPerPeppe} = {totaleChiara}€
         </span>
         <br />
         <span>
           <span>
-            Quindi = {normalizeBalance(balances.totPeppePerEntrambi * 0.3)} +{" "}
+            Quindi = {normalizeBalance(balances.totPeppePerEntrambi * 0.4)} +{" "}
             {balances.totPeppePerChiara} = {totalePeppe}€
           </span>
         </span>
