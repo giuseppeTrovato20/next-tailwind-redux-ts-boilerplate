@@ -7,6 +7,7 @@ export interface IPayment {
   paidFor: ["Peppe"] | ["Chiara"] | ["Peppe", "Chiara"];
   amount: number;
   forWhat: string;
+  category?: string;
 }
 
 const API_URL =
