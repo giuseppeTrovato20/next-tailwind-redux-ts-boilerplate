@@ -13,7 +13,6 @@ export const HelloWorld = () => {
   const [changed, setChanged] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [category, setCategory] = useState<string>("");
 
   const [user, setUser] = useState<"Peppe" | "Chiara">("Chiara");
   const [amount, setAmount] = useState<number>();
@@ -33,15 +32,13 @@ export const HelloWorld = () => {
           amount,
           paidFor,
           forWhat,
-          category,
         });
       } else {
         createPayment({
           user,
           amount,
           paidFor,
-          forWhat,
-          category,
+          forWhat
         });
       }
 
@@ -49,7 +46,6 @@ export const HelloWorld = () => {
       setAmount(undefined);
       setPaidFor(["Peppe", "Chiara"]);
       setForWhat("");
-      setCategory("");
       setEditModeId("");
       setShowModal(false);
     } else {
@@ -195,7 +191,6 @@ export const HelloWorld = () => {
     setShowModal(true);
     setPaidFor(["Peppe", "Chiara"]);
     setPaidForSelect("Per entrambi");
-    setCategory("");
     setForWhat("");
   };
 
@@ -205,14 +200,12 @@ export const HelloWorld = () => {
     amount,
     paidFor,
     forWhat,
-    category,
   }: {
     id: string | undefined;
     user: "Peppe" | "Chiara";
     amount: number;
     paidFor: ["Peppe"] | ["Chiara"] | ["Peppe", "Chiara"];
     forWhat: string;
-    category?: string;
   }) => {
     setShowModal(true);
 
@@ -227,7 +220,6 @@ export const HelloWorld = () => {
         : "Per entrambi"
     );
     setForWhat(forWhat);
-    setCategory(category || "");
     setEditModeId(id ? id : "");
   };
 
@@ -254,7 +246,6 @@ export const HelloWorld = () => {
                     amount: p.amount,
                     paidFor: p.paidFor,
                     forWhat: p.forWhat,
-                    category: p.category,
                   })
                 }
                 className="btn btn-accent p-1 mr-1 h-2"
@@ -369,17 +360,6 @@ export const HelloWorld = () => {
                   onChange={(e) => setForWhat(e.target.value)}
                   className="input input-bordered w-full max-w-xs"
                   required
-                />
-              </label>
-              <label className="form-control w-full max-w-xs">
-                <div className="label">
-                  <span className="label-text">Categoria </span>
-                </div>
-                <input
-                  type="text"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="input input-bordered w-full max-w-xs"
                 />
               </label>
               <label className="form-control w-full max-w-xs">
